@@ -1,0 +1,50 @@
+/*"NATURAL LANGUAGE PROCESSING (NLP)" :
+NLTK Movie Reviews Corpus: i have used the movie_reviews dataset from NLTK for a labeled text corpus of positive and negative movie reviews.
+Text Preprocessing: The CountVectorizer converts text into a bag-of-words representation.
+Naive Bayes Classifier:applied the MultinomialNB model, which is suitable for text classification.
+Evaluation: The code evaluates the model’s performance using accuracy and a classification report.*/
+
+
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score, classification_report
+
+# Sample data: text and corresponding sentiment labels
+texts = [
+    "I love this movie, it was fantastic and inspiring!",
+    "The film was terrible, I hated every moment of it.",
+    "What a beautiful and heartwarming story!",
+    "The plot was dull and the characters were uninteresting.",
+    "Absolutely brilliant performance by the lead actor.",
+    "I wouldn't recommend this to anyone, it was awful.",
+    "It was okay, not the best but not the worst either.",
+    "An amazing experience, I was moved to tears!",
+    "This movie is not worth your time, very disappointing.",
+    "A delightful film with a captivating storyline."
+]
+
+# Corresponding labels for the texts: 'pos' for positive, 'neg' for negative
+labels = [
+    'pos', 'neg', 'pos', 'neg', 'pos',
+    'neg', 'neutral', 'pos', 'neg', 'pos'
+]
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(texts, labels, test_size=0.3, random_state=42)
+
+# Convert text data to feature vectors
+vectorizer = CountVectorizer()
+X_train_vectors = vectorizer.fit_transform(X_train)
+X_test_vectors = vectorizer.transform(X_test)
+
+# Train a Naive Bayes classifier
+model = MultinomialNB()
+model.fit(X_train_vectors, y_train)
+
+# Make predictions on the test set
+y_pred = model.predict(X_test_vectors)
+
+# Evaluate the model
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("\nClassification Report:\n", classification_report(y_test, y_pred, zero_division=0))
